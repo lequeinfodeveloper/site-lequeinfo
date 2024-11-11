@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LEQUEINFO - Desenvolvimento de Sites</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.2/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" rel="stylesheet">
+    <!-- EmailJS SDK -->
+    <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
+     <!-- Google reCAPTCHA -->
+     <script src="https://www.google.com/recaptcha/api.js" async defer></script>
+    <script>
+        // Inicialização do EmailJS
+        (function() {
+            // TODO: Substituir com sua Public Key do EmailJS
+            emailjs.init("1Rq36h7Qc_62ENDTY");
+        })();
+
+        // Função para validar email
+        function validarEmail(email) {
+            const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            return re.test(email);
+        }
+
+        // Função para validar o formulário
+        function validarFormulario() {
+            let valido = true;
+            const nome = document.getElementById('nome');
+            const email = document.getElementById('email');
+            const mensagem = document.getElementById('mensagem');
+
+            // Validar nome
+            if (nome.value.trim() === '') {
+                nome.classList.add('is-invalid');
+                valido = false;
+            } else {
+                nome.classList.remove('is-invalid');
+                nome.classList.add('is-valid');
+            }
+
+            // Validar email
+            if (!validarEmail(email.value)) {
+                email.classList.add('is-invalid');
+                valido = false;
+            } else {
+                email.classList.remove('is-invalid');
+                email.classList.add('is-valid');
+            }
+
+            // Validar mensagem
+            if (mensagem.value.trim() === '') {
+                mensagem.classList.add('is-invalid');
+                valido = false;
+            } else {
+                mensagem.classList.remove('is-invalid');
+                mensagem.classList.add('is-valid');
+            }
+
+            return valido;
+        }
+
+        // Função para enviar o formulário
+        async function enviarFormulario(event) {
+            event.preventDefault();
+
+            // Esconder mensagens anteriores
+            document.getElementById('sucessoMsg').classList.add('d-none');
+            document.getElementById('erroMsg').classList.add('d-none');
+
+            // Validar formulário
+            if (!validarFormulario()) {
+                return false;
+            }
+
+            // Mostrar spinner e desabilitar botão
+            const btnText = document.getElementById('btnText');
+            const btnSpinner = document.getElementById('btnSpinner');
+            const btnEnviar = document.getElementById('btnEnviar');
+            btnText.classList.add('d-none');
+            btnSpinner.classList.remove('d-none');
+            btnEnviar.disabled = true;
+
+            try {
+                // TODO: Substituir com seu Template ID e Service ID do EmailJS
+                await emailjs.sendForm('service_qvnli8m', 'template_ybbc1yx', event.target);
+                
+                // Mostrar mensagem de sucesso
+                document.getElementById('sucessoMsg').classList.remove('d-none');
+                
+                // Limpar formulário
+                event.target.reset();
+                document.querySelectorAll('.is-valid').forEach(el => el.classList.remove('is-valid'));
+                
+            } catch (error) {
+                // Mostrar mensagem de erro
+                document.getElementById('erroMsg').classList.remove('d-none');
+                console.error('Erro ao enviar email:', error);
+            } finally {
+                // Restaurar botão
+                btnText.classList.remove('d-none');
+                btnSpinner.classList.add('d-none');
+                btnEnviar.disabled = false;
+            }
+
+            return false;
+        }
+    </script>
+</head>
+<body>
+    <!-- Navbar -->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top">
+        <div class="container">
+            <a class="navbar-brand" href="#">LEQUEINFO</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="#inicio">Início</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#servicos">Serviços</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#sobre">Sobre</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#contato">Contato</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section id="inicio" class="bg-primary text-white text-center py-5" style="margin-top: 56px;">
+        <div class="container py-5">
+            <h1 class="display-4 fw-bold">Desenvolvimento de Sites Profissionais</h1>
+            <p class="lead">Transforme sua presença digital com soluções web modernas e responsivas</p>
+            <a href="#contato" class="btn btn-light btn-lg">Entre em Contato</a>
+        </div>
+    </section>
+
+    <!-- Serviços -->
+    <section id="servicos" class="py-5">
+        <div class="container">
+            <h2 class="text-center mb-5">Nossos Serviços</h2>
+            <div class="row">
+                <div class="col-md-4 mb-4">
+                    <div class="card h-100">
+                        <div class="card-body text-center">
+                            <i class="fas fa-laptop-code fa-3x text-primary mb-3"></i>
+                            <h3 class="card-title">Sites Responsivos</h3>
+                            <p class="card-text">Desenvolvimento de sites adaptáveis a todos os dispositivos.</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4 mb-4">
+                    <div class="card h-100">
+                        <div class="card-body text-center">
+                            <i class="fas fa-shopping-cart fa-3x text-primary mb-3"></i>
+                            <h3 class="card-title">E-commerce</h3>
+                            <p class="card-text">Lojas virtuais completas para seu negócio online.</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4 mb-4">
+                    <div class="card h-100">
+                        <div class="card-body text-center">
+                            <i class="fas fa-mobile-alt fa-3x text-primary mb-3"></i>
+                            <h3 class="card-title">Landing Pages</h3>
+                            <p class="card-text">Páginas otimizadas para conversão de visitantes.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Sobre -->
+    <section id="sobre" class="py-5 bg-light">
+        <div class="container">
+            <div class="row align-items-center">
+                <div class="col-lg-6">
+                    <h2 class="mb-4">Sobre Nós</h2>
+                    <p>Somos especialistas em desenvolvimento web, focados em criar soluções digitais que impulsionam o sucesso dos nossos clientes.</p>
+                    <ul class="list-unstyled">
+                        <li><i class="fas fa-check text-primary me-2"></i>Design moderno e profissional</li>
+                        <li><i class="fas fa-check text-primary me-2"></i>Código limpo e otimizado</li>
+                        <li><i class="fas fa-check text-primary me-2"></i>Suporte técnico especializado</li>
+                    </ul>
+                </div>
+                <div class="col-lg-6">
+                    <img src="C:\Users\elton\OneDrive\Área de Trabalho\Trabalho Novo\lequeinfo\img\vecteezy_group-of-people-in-a-collaboration-concept_1223767.jpg" alt="Sobre nós" class="img-fluid rounded">
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Contato -->
+    <section id="contato" class="py-5">
+        <div class="container">
+            <h2 class="text-center mb-5">Entre em Contato</h2>
+            <div class="row justify-content-center">
+                <div class="col-lg-8">
+                    <!-- Alerta de sucesso -->
+                    <div class="alert alert-success d-none" id="sucessoMsg">
+                        Mensagem enviada com sucesso! Entraremos em contato em breve.
+                    </div>
+                    <!-- Alerta de erro -->
+                    <div class="alert alert-danger d-none" id="erroMsg">
+                        Ocorreu um erro ao enviar a mensagem. Por favor, tente novamente.
+                    </div>
+                    <form id="formContato" onsubmit="return enviarFormulario(event)">
+                        <div class="mb-3">
+                            <input type="text" class="form-control" id="nome" name="nome" placeholder="Seu Nome" required>
+                            <div class="invalid-feedback">
+                                Por favor, informe seu nome.
+                            </div>
+                        </div>
+                        <div class="mb-3">
+                            <input type="email" class="form-control" id="email" name="email" placeholder="Seu Email" required>
+                            <div class="invalid-feedback">
+                                Por favor, informe um email válido.
+                            </div>
+                        </div>
+                        <div class="mb-3">
+                            <textarea class="form-control" id="mensagem" name="mensagem" rows="5" placeholder="Sua Mensagem" required></textarea>
+                            <div class="invalid-feedback">
+                                Por favor, escreva sua mensagem.
+                            </div>
+                        </div>
+                        <div class="text-center">
+                            <button type="submit" class="btn btn-primary btn-lg" id="btnEnviar">
+                                <span id="btnText">Enviar Mensagem</span>
+                                <span class="spinner-border spinner-border-sm d-none" id="btnSpinner" role="status" aria-hidden="true"></span>
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="bg-dark text-white text-center py-4">
+        <div class="container">
+            <p class="mb-0">&copy; 2024 Web Solutions. Todos os direitos reservados.</p>
+        </div>
+    </footer>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.2/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
